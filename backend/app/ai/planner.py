@@ -84,6 +84,7 @@ Return ONLY valid JSON.
 
     # ---- SAFE FALLBACK (NO list()[0]) ----
     tables = list(DB_SCHEMA["tables"])[0] 
+    print(DB_SCHEMA)
 
     # Reasonable default entity
    
