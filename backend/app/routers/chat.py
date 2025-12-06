@@ -19,7 +19,7 @@ def get_db():
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 
-@router.post("/", response_model=schemas.MessageOut)
+@router.post("", response_model=schemas.MessageOut)
 def chat_endpoint(payload: schemas.MessageCreate, db: Session = Depends(get_db)):
     """
     Main chat endpoint using built-in planner and summarizer (no external AI).
