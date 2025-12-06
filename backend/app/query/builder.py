@@ -311,8 +311,14 @@ def build_sql_from_plan(plan: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
             params[param_name] = tuple(value) if isinstance(value, list) else (value,)
             where_clauses.append(f"{field} {operator} :{param_name}")
         else:
-            params[param_name] = value
-            where_clauses.append(f"{field} {operator} :{param_name}")
+            # Special handling for ILIKE because SQLite doesn't support it natively
+            if operator == "ILIKE":
+                # Case-insensitive match using LOWER(...)
+                params[param_name] = str(value).lower()
+                where_clauses.append(f"LOWER({field}) LIKE :{param_name}")
+            else:
+                params[param_name] = value
+                where_clauses.append(f"{field} {operator} :{param_name}")
 
     # Apply WHERE if needed
     if where_clauses:
@@ -365,7 +371,8 @@ def apply_filters(query, filters, model_map):
         elif operator == "LIKE":
             query = query.filter(column.like(value))
         elif operator == "ILIKE":
-            query = query.filter(column.ilike(value))
+    # SQLite-safe case-insensitive filtering
+            query = query.filter(column.like(value.lower())).filter(column != None)
         else:
             # Default to equality
             query = query.filter(column == value)
