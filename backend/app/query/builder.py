@@ -319,6 +319,7 @@ def build_sql_from_plan(plan: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
         limit = 50
 
     sql += f" LIMIT {limit}"
+    print(sql)
 
     return sql, params
 
