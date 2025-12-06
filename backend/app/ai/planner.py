@@ -23,7 +23,7 @@ Below is the entire database schema (tables, columns, foreign keys):
 STRICT INSTRUCTIONS
 =========================
 
-1. OUTPUT MUST BE VALID JSON ONLY.
+1. OUTPUT MUST BE VALID JSON ONLY.  
    No commentary, no markdown, no explanations, no SQL queries.
 
 2. JSON MUST include ALL these keys:
@@ -37,21 +37,28 @@ STRICT INSTRUCTIONS
   "limit": 50
 }}
 
-3. DO NOT INCLUDE ANY "joins" FIELD.
+3. DO NOT INCLUDE ANY "joins" FIELD.  
    The server automatically builds JOINs using foreign keys.
 
 4. "entity" MUST be one of the tables in the schema.
 
-5. "select" MUST contain fully qualified column names: "table.column".
+5. "select" MUST contain fully qualified column names: "table.column".  
    Use EXACT column names from schema above.
+   For student names, use "students.first_name" and "students.last_name", NOT "students.name"
 
 6. For text searches (names, titles, descriptions):
    - Use "ILIKE" operator for case-insensitive matching
-   - Use %...% wildcards for partial matches.
+   - For partial name matching, use: {{"field": "students.first_name", "operator": "ILIKE", "value": "%riya%"}}
+   - For full name search, search BOTH first_name and last_name separately
+   
+7. For exact matches (IDs, numbers, dates): Use "=" operator
 
-7. For exact matches (IDs, numbers, dates): Use "=" operator.
+8. Allowed operators: =, !=, >, <, >=, <=, LIKE, ILIKE
 
-8. Allowed operators: =, !=, >, <, >=, <=, LIKE, ILIKE.
+9. When searching for a person by name:
+   - Always use ILIKE with % wildcards
+   - Search first_name OR last_name (create separate filters)
+   - Example: searching "riya" should create filter for first_name ILIKE '%riya%'
 
 =========================
 
