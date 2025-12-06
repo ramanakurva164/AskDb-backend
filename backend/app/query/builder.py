@@ -361,5 +361,5 @@ def apply_filters(query, filters, model_map):
         else:
             # Default to equality
             query = query.filter(column == value)
-
+    print(query)
     return query
