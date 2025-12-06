@@ -90,7 +90,7 @@ Return ONLY valid JSON.
     
     default_entity = list(DB_SCHEMA["tables"])[0]
 
-    plan.setdefault("entity", default_entity)
+    plan.setdefault("entity", tables)
     plan.setdefault("select", ["*"])
     plan.setdefault("filters", [])
     plan.setdefault("limit", 20)
