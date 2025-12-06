@@ -282,12 +282,8 @@ Return ONLY valid JSON.
             "filters": [],
             "limit": 20,
         }
-    tables = DB_SCHEMA.get("tables", [])
-    default_entity = "student_assignments"
-    if tables:
-        default_entity = tables[0]
 
-    plan.setdefault("entity", default_entity)
+    plan.setdefault("entity", list(DB_SCHEMA["tables"])[0])
     plan.setdefault("select", ["*"])
     plan.setdefault("filters", [])
     plan.setdefault("limit", 20)
