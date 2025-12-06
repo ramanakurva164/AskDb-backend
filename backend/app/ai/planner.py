@@ -83,12 +83,12 @@ Return ONLY valid JSON.
         plan = {}
 
     # ---- SAFE FALLBACK (NO list()[0]) ----
-    tables = DB_SCHEMA.get("tables") or []
+    tables = list(DB_SCHEMA["tables"])[0] or []
 
     # Reasonable default entity
     default_entity = "student_assignments"
     if tables:
-        default_entity = tables[0]
+        default_entity = list(DB_SCHEMA["tables"])[0]
 
     plan.setdefault("entity", default_entity)
     plan.setdefault("select", ["*"])
