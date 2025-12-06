@@ -297,13 +297,22 @@ def build_sql_from_plan(plan: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
         if not validate_column(field):
             raise ValueError(f"Invalid filter column: {field}")
 
-        if operator not in ["=", "!=", ">", "<", ">=", "<=", "LIKE"]:
+        # Validate allowed operators
+        if operator not in ["=", "!=", ">", "<", ">=", "<=", "LIKE", "ILIKE", "IN", "NOT IN", "IS NULL", "IS NOT NULL"]:
             operator = "="
 
         param_name = f"p{idx}"
-        params[param_name] = value
-
-        where_clauses.append(f"{field} {operator} :{param_name}")
+        
+        # Handle NULL operators (no value needed)
+        if operator in ["IS NULL", "IS NOT NULL"]:
+            where_clauses.append(f"{field} {operator}")
+        # Handle IN/NOT IN (value should be a list)
+        elif operator in ["IN", "NOT IN"]:
+            params[param_name] = tuple(value) if isinstance(value, list) else (value,)
+            where_clauses.append(f"{field} {operator} :{param_name}")
+        else:
+            params[param_name] = value
+            where_clauses.append(f"{field} {operator} :{param_name}")
 
     # Apply WHERE if needed
     if where_clauses:
@@ -319,7 +328,6 @@ def build_sql_from_plan(plan: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
         limit = 50
 
     sql += f" LIMIT {limit}"
-    print(sql)
 
     return sql, params
 
